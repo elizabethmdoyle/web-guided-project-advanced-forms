@@ -1,23 +1,28 @@
 // Here goes the schema for the form
-import * as Yup from 'yup'
+import * as yup from 'yup'
 
-const formSchema = Yup.object().shape({
-    username: Yup
-        .string('Username is required')
+const formSchema = yup.object().shape({
+    username: yup
+        .string()
         .required('Please enter a name')
-    email: Yup
-        .string('Must be a valid email address')
+        .min("Username must have at least 3 characters")
+
+    email: yup
+         .string()
+        .email('Must be a valid email address')
         .required('Must be a valid email address')
        
-        role: Yup
-        .dropdown('A role must be selected')
-        .required('Must be a valid email address')
-        civil: Yup
-        .checkbox('A civil option must be selected')
-        .required('Must select an option')
-        
+    role: yup
+        .string()
+        .oneOf(['instructor', 'student', 'alumni'], 'Role is required'),
+      civil: yup
+        .string()
+        .oneOf(['married', 'single'], 'Civil status is required'),
+      coding: yup.boolean(),
+      reading: yup.boolean(),
+      hiking: yup.boolean(),
+    })
 
 
+export default schema
 
-
-})

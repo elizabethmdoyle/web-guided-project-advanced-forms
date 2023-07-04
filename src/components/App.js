@@ -53,30 +53,32 @@ export default function App() {
       axios.get(`http://buddies.com/api/friends`)
        .then(res => setFriends(res.data))
        .catch(err => console.error(Err))
- `` }
-  }
+ `` }  
 
   const postNewFriend = newFriend => {
     // 🔥 STEP 6- IMPLEMENT! ON SUCCESS ADD NEWLY CREATED FRIEND TO STATE
     //    helper to [POST] `newFriend` to `http://buddies.com/api/friends`
     //    and regardless of success or failure, the form should reset
 
-    useEffect(() => {
-        axios.post(`http://buddies.com/api/friends`)
+  
+        axios.post(`http://buddies.com/api/friends`, newFriend)
         .then(res => 
           setFriends([res.data, ...friends])
           setFormValues(initialFormValues)
         
         )
         .catch(err => console.error(Err))
-    }, [])
-  }
+    }
+  
 
   //////////////// EVENT HANDLERS ////////////////
   //////////////// EVENT HANDLERS ////////////////
   //////////////// EVENT HANDLERS ////////////////
   const inputChange = (name, value) => {
     // 🔥 STEP 10- RUN VALIDATION WITH YUP
+    yup.reach(name, value)
+      .validate(value)
+
     setFormValues({
       ...formValues,
       [name]: value // NOT AN ARRAY
@@ -90,6 +92,8 @@ export default function App() {
       role: formValues.role.trim(),
       civil: formValues.civil.trim(),
       // 🔥 STEP 7- WHAT ABOUT HOBBIES?
+
+      hobbies: ['hiking', 'reading', 'coding'].filter(hob => !!formValues[hob])
 
     }
     // 🔥 STEP 8- POST NEW FRIEND USING HELPER
@@ -109,7 +113,9 @@ export default function App() {
 
   useEffect(() => {
     // 🔥 STEP 9- ADJUST THE STATUS OF `disabled` EVERY TIME `formValues` CHANGES
-
+    schema.isValid(formValues)
+    .then(valid => 
+     setDisabled(!valid) )
 
   }, [formValues])
 
